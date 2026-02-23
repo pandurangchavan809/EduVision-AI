@@ -1,89 +1,86 @@
-# EduVision AI – Intelligent Student Performance Analytics System
+# EduVision AI
 
-EduVision AI is an AI-powered academic analytics platform designed to help teachers, students, and academic administrators monitor and evaluate student performance efficiently.
+EduVision is an academic analytics system that tracks student performance using PRN-based records and generates improvement guidance.
 
-The system allows faculty to search students using their **PRN number**, analyze academic performance from **12th grade to current semester**, and generate **AI-based insights** to support student improvement.
+## Student Portal (Implemented)
 
----
+Student-side pages are built with Tailwind + vanilla JS and are separated by route:
+- `frontend/student/dashboard.html`
+- `frontend/student/progress.html`
+- `frontend/student/reports.html`
+- `frontend/student/improvement.html`
 
-## Features
+The pages fetch live data from the backend API (not hardcoded values).
 
-### PRN-Based Student Search
-Quickly retrieve student academic data using the unique PRN number.
+## Backend API
 
-### Student Performance Dashboard
-Visualize SGPA trends and subject-wise performance using interactive graphs and charts.
+Backend entrypoint:
+- `backend/app.py`
 
-### Certification & Project Tracking
-Students can upload certifications and project details for evaluation and academic record keeping.
+Main features:
+- Connects to local MySQL DB (`localhost`) using environment variables
+- Reads schema tables from `db.sql`:
+  - `students`
+  - `marks_12th`
+  - `sem1` to `sem6`
+  - `student_skills`
+- Builds student dashboard/progress/report payloads from DB records
+- Calls Gemini API (server-side key) for improvement recommendations
+- Falls back to rule-based recommendations if Gemini key/call is unavailable
+- Optional strict mode: set `GEMINI_REQUIRED=true` to fail the endpoint if Gemini does not respond
 
-### Faculty Approval System
-Uploaded student data must be verified and approved by faculty before being stored in the database.
+## Environment Setup
 
-### AI-Based Performance Analysis
-Automatically generates insights highlighting:
-- Student strengths
-- Weak academic areas
-- Suggested improvement strategies
+1. Copy `.env.example` to `.env`
+2. Fill:
+   - `DB_HOST`
+   - `DB_PORT`
+   - `DB_USER`
+   - `DB_PASSWORD`
+   - `DB_NAME`
+   - `DB_SSL_CA` (keep empty for localhost)
+   - `GEMINI_API_KEY`
+   - `GEMINI_MODEL` (default `gemini-1.5-flash`)
 
-### Department Analytics
-HODs and principals can monitor department-level academic performance and overall trends.
+3. Import schema/data into local MySQL:
+```bash
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS eduvision_ai;"
+mysql -u root -p eduvision_ai < db.sql
+```
 
-### Marksheet Image Processing (Optional)
-Upload marksheet images and automatically extract academic data using image processing.
+## Run Locally
 
----
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-## Tech Stack
+2. Start backend:
+```bash
+python backend/app.py
+```
 
-### Frontend
-- React
-- Tailwind CSS
-- Chart.js / Recharts
+3. Start frontend static server:
+```bash
+python -m http.server 5500 --directory frontend
+```
 
-### Backend
-- Flask (Python API)
+4. Open:
+- `http://127.0.0.1:5500`
 
-### Database
-- MongoDB / MySQL
+5. Enter:
+- PRN (example: `72309101A`)
+- API Base URL (default: `http://127.0.0.1:5000/api`)
 
-### AI & Machine Learning
-- Scikit-learn for prediction models
-- NLP for skill extraction
-- LLM API for academic report generation
+6. Verify health before opening student pages:
+```bash
+curl http://127.0.0.1:5000/api/health
+```
 
----
+## Student API Endpoints
 
-## System Workflow
-
-1. Teacher logs into the dashboard.
-2. Teacher searches for a student using the **PRN number**.
-3. The system retrieves:
-   - Student profile
-   - Academic marks
-   - Certifications
-   - Project details
-4. ML models analyze academic trends.
-5. AI generates a performance report and improvement suggestions.
-6. Faculty reviews and approves student-submitted data before final storage.
-
----
-
-## Future Improvements
-
-- Advanced predictive analytics for academic risk detection
-- Automated placement readiness analysis
-- Real-time university data integration
-- Mobile application support
-
----
-
-## Project Goal
-
-The goal of **EduVision AI** is to create an **intelligent academic monitoring system** that helps institutions make **data-driven decisions** and improves **student learning outcomes**.
-
----
-
-## Project Type
-
-**Final Year Project – Artificial Intelligence / Data Science**
+- `GET /api/health`
+- `GET /api/student/<prn>/dashboard`
+- `GET /api/student/<prn>/progress`
+- `GET /api/student/<prn>/reports`
+- `GET /api/student/<prn>/improvement`

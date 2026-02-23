@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduVision Student Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-100">
+  <div class="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4">
+    <div class="grid w-full gap-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:grid-cols-2">
+      <section class="space-y-5">
+        <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">EduVision</span>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-900">Student Analytics Portal</h1>
+        <p class="text-slate-600">
+          Login with PRN and open your student dashboard. Data is loaded from your local MySQL DB through the backend API.
+        </p>
+        <ul class="space-y-2 text-sm text-slate-600">
+          <li>Student dashboard with SGPA trend</li>
+          <li>Subject-wise progress and report cards</li>
+          <li>Gemini-powered improvement recommendations</li>
+        </ul>
+      </section>
+
+      <section class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+        <form id="entry-form" class="space-y-4">
+          <div>
+            <label for="prn" class="mb-1 block text-sm font-medium text-slate-700">Student PRN</label>
+            <input
+              id="prn"
+              type="text"
+              placeholder="72309101A"
+              list="student-prn-list"
+              required
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none ring-blue-500 focus:ring"
+            >
+            <datalist id="student-prn-list"></datalist>
+            <p id="prn-help" class="mt-2 text-xs text-slate-500">Loading available PRNs...</p>
+          </div>
+
+          <div>
+            <label for="apiBase" class="mb-1 block text-sm font-medium text-slate-700">API Base URL</label>
+            <input
+              id="apiBase"
+              type="text"
+              value="http://127.0.0.1:5000/api"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none ring-blue-500 focus:ring"
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700"
+          >
+            Open Student Dashboard
+          </button>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("entry-form");
+    const prnInput = document.getElementById("prn");
+    const apiBaseInput = document.getElementById("apiBase");
+    const prnList = document.getElementById("student-prn-list");
+    const prnHelp = document.getElementById("prn-help");
+
+    const savedPrn = localStorage.getItem("eduvision_prn");
+    const savedApi = localStorage.getItem("eduvision_api_base");
+    if (savedPrn) prnInput.value = savedPrn;
+    if (savedApi) apiBaseInput.value = savedApi;
+
+    async function loadPrnSuggestions() {
+      const apiBase = apiBaseInput.value.trim().replace(/\/$/, "");
+      try {
+        const response = await fetch(`${apiBase}/students`);
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "Unable to load PRNs");
+        const students = payload.students || [];
+        prnList.innerHTML = students
+          .map((student) => `<option value="${student.prn}">${student.name}</option>`)
+          .join("");
+        prnHelp.textContent = students.length
+          ? `Loaded ${students.length} PRNs from database.`
+          : "No student rows found in database.";
+      } catch (error) {
+        prnHelp.textContent = "Could not load PRNs from API. You can still type PRN manually.";
+      }
+    }
+
+    apiBaseInput.addEventListener("change", loadPrnSuggestions);
+    loadPrnSuggestions();
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const prn = prnInput.value.trim().toUpperCase();
+      const apiBase = apiBaseInput.value.trim();
+      localStorage.setItem("eduvision_prn", prn);
+      localStorage.setItem("eduvision_api_base", apiBase);
+      window.location.href = `student/dashboard.html?prn=${encodeURIComponent(prn)}`;
+    });
+  </script>
+</body>
+</html>
+
+

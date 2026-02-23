@@ -4,4 +4,9 @@ pandas
 matplotlib
 seaborn
 xgboost
+Flask
+flask-cors
+PyMySQL
+python-dotenv
+requests
 

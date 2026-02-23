@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduVision | Reports</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body data-page="reports" class="bg-slate-100 text-slate-900">
+  <div class="min-h-screen lg:flex">
+    <aside class="w-full border-b border-slate-200 bg-white lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r">
+      <div class="border-b border-slate-200 p-6">
+        <h1 class="text-2xl font-bold text-blue-600">EduVision</h1>
+        <p class="text-sm text-slate-500">Student Portal</p>
+      </div>
+      <nav class="space-y-1 p-4">
+        <a data-nav="dashboard" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition" href="dashboard.html">Dashboard</a>
+        <a data-nav="progress" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition" href="progress.html">My Progress</a>
+        <a data-nav="reports" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition" href="reports.html">Reports</a>
+        <a data-nav="improvement" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition" href="improvement.html">Improvement</a>
+      </nav>
+      <div class="px-4 pb-6 lg:mt-36">
+        <button id="logoutBtn" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50">
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1">
+      <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div class="flex flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-7">
+          <div>
+            <h2 class="text-3xl font-bold tracking-tight">My Reports</h2>
+            <p class="text-slate-500">Semester-wise academic records</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="downloadTranscriptBtn" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+              Download Official Transcript
+            </button>
+            <div class="flex items-center gap-3 rounded-xl bg-slate-100 px-3 py-2">
+              <div class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-sm font-bold text-blue-700" data-student-initials>ST</div>
+              <div>
+                <p class="text-sm font-semibold" data-student-name>Student</p>
+                <p class="text-xs text-slate-500" data-student-prn>PRN</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="space-y-6 p-4 lg:p-7">
+        <div id="page-error"></div>
+
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <article class="rounded-2xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">Current SGPA</p>
+            <p id="summaryCurrentSgpa" class="mt-3 text-3xl font-bold">-</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">Overall CGPA</p>
+            <p id="summaryOverallCgpa" class="mt-3 text-3xl font-bold">-</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">Class Rank</p>
+            <p id="summaryRank" class="mt-3 text-3xl font-bold">-</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">12th Percentage</p>
+            <p id="summaryTwelfth" class="mt-3 text-3xl font-bold">-</p>
+          </article>
+          <article class="rounded-2xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">Semesters</p>
+            <p id="summarySemesters" class="mt-3 text-3xl font-bold">-</p>
+          </article>
+        </div>
+
+        <div id="reportsList" class="space-y-4"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./js/common.js"></script>
+  <script src="./js/reports.js"></script>
+</body>
+</html>
