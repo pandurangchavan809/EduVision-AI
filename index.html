@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVision AI | Student Performance Analytics & Intelligence</title>
+    
+    <!-- Meta tags & SEO -->
+    <meta name="description" content="EduVision AI - Intelligent Student Performance Analytics & Predictive Academic Monitoring Platform.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Dynamic Background Glow -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <span>EduVision <strong style="color: var(--cyan);">AI</strong></span>
+            </div>
+
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Student Analytics</span>
+                </button>
+                <button class="tab-btn" data-tab="faculty">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Faculty Approvals</span>
+                </button>
+                <button class="tab-btn" data-tab="department">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>Department Portal</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="app-container">
+
+        <!-- Search Bar Area -->
+        <section class="search-section">
+            <div class="search-box-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="prn-search-input" class="search-input" placeholder="Search by Student PRN Number or Name (e.g., 2023AIDS001 or Aditya)..." value="2023AIDS001" autocomplete="off">
+                <div id="search-results-dropdown" class="search-results-dropdown"></div>
+            </div>
+        </section>
+
+        <!-- 1. Student Dashboard Tab -->
+        <section id="dashboard-tab" class="tab-content">
+            <div class="dashboard-grid">
+                
+                <!-- Left Sidebar: Profile Card -->
+                <aside class="glass-card profile-card">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h2 class="profile-name" id="student-name">Aditya Pawar</h2>
+                    <span class="profile-prn" id="student-prn">2023AIDS001</span>
+                    <p class="profile-dept" id="student-dept">AI & Data Science</p>
+                    <span id="risk-status-badge" class="badge badge-emerald">Low Risk / High Performer</span>
+
+                    <div class="metrics-list">
+                        <div class="metric-row">
+                            <span class="metric-label">Cumulative CGPA</span>
+                            <span class="metric-value" id="student-cgpa">8.28</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Attendance Rate</span>
+                            <span class="metric-value" id="student-attendance">94.5%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">12th Score</span>
+                            <span class="metric-value" id="student-hsc">88.6%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Project Evaluation</span>
+                            <span class="metric-value" id="student-project">96%</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Right Main Content -->
+                <div class="main-dashboard-content">
+                    
+                    <!-- AI Insights Box -->
+                    <div class="glass-card ai-insights-card">
+                        <div class="ai-header">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h3 style="font-family: var(--font-heading);">AI Academic Analytics Report</h3>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);" id="ai-summary-text">Analyzing student academic trajectory and generating predictive insights...</p>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(0,0,0,0.3); padding: 0.85rem 1.25rem; border-radius: 10px; border: 1px solid var(--border-glass); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.95rem; color: var(--text-secondary);">Predicted Sem 7 Target SGPA:</span>
+                            <span style="font-size: 1.4rem; font-weight: 800; color: var(--cyan); font-family: var(--font-code);" id="predicted-sgpa">9.65 / 10.0</span>
+                        </div>
+
+                        <div class="insights-grid">
+                            <div class="insight-block">
+                                <h4><i class="fa-solid fa-circle-check text-emerald"></i> Academic Strengths</h4>
+                                <ul id="strengths-list"></ul>
+                            </div>
+                            <div class="insight-block">
+                                <h4><i class="fa-solid fa-triangle-exclamation text-amber"></i> Subject Gap Analysis</h4>
+                                <ul id="weaknesses-list"></ul>
+                            </div>
+                        </div>
+
+                        <div class="insight-block" style="margin-top: 1.25rem;">
+                            <h4><i class="fa-solid fa-lightbulb text-cyan"></i> Actionable Growth Strategy</h4>
+                            <ul id="recommendations-list"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="glass-card">
+                            <h3 class="panel-title"><i class="fa-solid fa-chart-line"></i> SGPA Trajectory Trend</h3>
+                            <div class="chart-container">
+                                <canvas id="sgpaTrendChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <h3 class="panel-title"><i class="fa-solid fa-chart-bar"></i> Core Subject Performance</h3>
+                            <div class="chart-container">
+                                <canvas id="subjectChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Certifications Table -->
+                    <div class="glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 class="panel-title" style="margin-bottom: 0;"><i class="fa-solid fa-certificate"></i> Certifications & Project Track</h3>
+                            <button class="btn btn-primary btn-sm" id="open-cert-modal-btn">
+                                <i class="fa-solid fa-plus"></i> Upload Certification
+                            </button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Certification Title</th>
+                                        <th>Issuing Organization</th>
+                                        <th>Date</th>
+                                        <th>Verification Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="certs-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Faculty Approvals Tab -->
+        <section id="faculty-tab" class="tab-content" style="display: none;">
+            <div class="glass-card">
+                <h2 class="panel-title"><i class="fa-solid fa-user-check"></i> Faculty Certification Approval Queue</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.25rem;">Verify student-submitted certifications and projects before final institutional storage.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Details</th>
+                                <th>Item Title</th>
+                                <th>Issuer / Platform</th>
+                                <th>Current Status</th>
+                                <th>Faculty Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faculty-approvals-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Department Analytics Tab -->
+        <section id="department-tab" class="tab-content" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div>
+                    <h2 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fa-solid fa-building-columns"></i> Institutional Department Portal</h2>
+                    <p style="color: var(--text-secondary);">Executive academic metrics for HODs and Principals.</p>
+                </div>
+                <div class="glass-card" style="padding: 0.75rem 1.5rem; text-align: center;">
+                    <small style="color: var(--text-muted);">At-Risk Students Alert</small>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--rose);" id="at-risk-count">0</div>
+                </div>
+            </div>
+
+            <div id="dept-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;"></div>
+
+            <div class="glass-card">
+                <h3 class="panel-title"><i class="fa-solid fa-trophy text-amber"></i> Top Institutional Academic Leaders</h3>
+                <div id="top-performers-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Upload Certification Modal -->
+    <div class="modal" id="cert-modal">
+        <div class="modal-overlay" id="cert-modal-overlay"></div>
+        <div class="modal-content glass-card">
+            <h3 style="font-family: var(--font-heading); margin-bottom: 1rem;"><i class="fa-solid fa-upload text-cyan"></i> Submit New Certification</h3>
+            <form id="cert-form">
+                <div class="form-group">
+                    <label for="cert-title">Certification Title</label>
+                    <input type="text" id="cert-title" class="form-control" placeholder="e.g. AWS Certified Solutions Architect" required>
+                </div>
+                <div class="form-group">
+                    <label for="cert-issuer">Issuing Organization / Platform</label>
+                    <input type="text" id="cert-issuer" class="form-control" placeholder="e.g. Coursera / AWS / NPTEL" required>
+                </div>
+                <div class="form-group">
+                    <label for="cert-date">Issue Date</label>
+                    <input type="date" id="cert-date" class="form-control" value="2026-07-31" required>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                    <button type="button" class="btn" id="close-cert-modal" style="background: rgba(255,255,255,0.1); color: #fff;">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit for Approval</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
